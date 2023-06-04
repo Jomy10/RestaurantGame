@@ -1,5 +1,4 @@
 // swift-tools-version: 5.7
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -20,13 +19,23 @@ let package = Package(
             dependencies: [
                 "GateEngine",
                 "GateUI",
-                "JAsync"
+                "JAsync",
+                "KeyboardLayout"
             ],
             resources: [.copy("Resources")]
         ),
         .target(name: "JAsync"),
         .target(name: "GateUI",
                 dependencies: ["GateEngine"]),
+        .target(name: "KeyboardLayout",
+                sources: {
+                    var sources = ["Sources/KeyboardLayout/keyboardLayout.swift"]
+                    #if os(macOS)
+                    sources.append("Sources/KeyboardLayout/mac")
+                    #endif
+                    return sources
+                }()),
+        
         .testTarget(
             name: "RestaurantGameTests",
             dependencies: ["RestaurantGame"]),
