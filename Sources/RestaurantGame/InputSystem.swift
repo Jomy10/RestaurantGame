@@ -6,6 +6,12 @@
 //
 
 import GateEngine
+import KeyboardLayout
+
+/// transform a key from the user's keyboard layout to QWERTY
+func transform(key: KeyboardKey) -> KeyboardKey {
+    return KeyboardLayout.detectOnce?.transform(key: key) ?? key
+}
 
 final class InputSystem: System {
     /// True if the button is currently being held down
@@ -26,8 +32,9 @@ final class InputSystem: System {
     
     private static var keyHeldDown: [KeyboardKey:Bool] = [
         .character("r"): false,
+        transform(key: .character("m")): false,
         .escape: false,
-        .return: false,
+        .enter(): false,
     ]
     private static var keyWasJustClicked: [KeyboardKey:Bool] = [:]
     public static var keyClicked: [KeyboardKey:Bool] {
