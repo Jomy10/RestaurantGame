@@ -28,8 +28,6 @@ let package = Package(
                 exclude: ["README.md"]),
         .target(name: "GateUI",
                 dependencies: ["GateEngine"]),
-        .target(name: "KeyboardLayout_mac",
-                path: "Sources/KeyboardLayout/mac"),
         .target(name: "KeyboardLayout",
                 dependencies: {
                     var dependencies: [Target.Dependency] = ["GateEngine"]
@@ -45,3 +43,11 @@ let package = Package(
             dependencies: ["RestaurantGame"]),
     ]
 )
+
+// Keyboard layout libraries
+#if os(macOS)
+package.targets.append(
+    .target(name: "KeyboardLayout_mac",
+            path: "Sources/KeyboardLayout/mac")
+)
+#endif
