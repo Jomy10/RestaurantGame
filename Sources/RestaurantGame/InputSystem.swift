@@ -10,7 +10,8 @@ import GateEngine
 final class InputSystem: System {
     /// True if the button is currently being held down
     private static var buttonHeldDown: [MouseButton:Bool] = [
-        .button1: false
+        .button1: false,
+        .button2: false,
     ]
     /// True if the button has just been pressed (e.g. this frame the button was pressed)
     private static var buttonWasJustClicked: [MouseButton:Bool] = [:]
@@ -19,14 +20,14 @@ final class InputSystem: System {
     }
     
     /// - Returns: True if the button is being held down rather than clicked
-    public static func isbuttonHeldDown(_ button: MouseButton) -> Bool {
+    public static func isButtonHeldDown(_ button: MouseButton) -> Bool {
         !(Self.buttonWasJustClicked[button] ?? false) && (Self.buttonHeldDown[button] ?? false)
     }
     
     private static var keyHeldDown: [KeyboardKey:Bool] = [
         .character("r"): false,
         .escape: false,
-        .return: false
+        .return: false,
     ]
     private static var keyWasJustClicked: [KeyboardKey:Bool] = [:]
     public static var keyClicked: [KeyboardKey:Bool] {

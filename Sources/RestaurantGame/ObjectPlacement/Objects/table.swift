@@ -27,6 +27,24 @@ extension ObjectSpawner {
     }
     
     fileprivate static func spawnTableRectangle(_ game: Game, _ position: Position3) -> Entity {
-        return Entity()
+        let table = Entity()
+        table.configure(Transform3Component.self) { comp in
+            comp.position = position
+            comp.scale = Self.tableSize
+        }
+        
+        table.configure(RenderingGeometryComponent.self) { comp in
+            comp.geometry = Geometry(path: "Resources/Objects/table_rectangle.obj")
+        }
+        
+        table.configure(MaterialComponent.self) { material in
+            material.channel(0) { channel in
+                channel.texture = Texture(path: "Resources/Textures/table_rectangle.png")
+            }
+        }
+        
+        game.insertEntity(table)
+        
+        return table
     }
 }

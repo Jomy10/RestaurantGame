@@ -12,12 +12,12 @@ final class ResourceLoadingSystem: System {
    
     // TODO: 
     private struct ResourceGroupLoaded {
-        var hasLoaded: Bool
-        var models: [String]
-        var textures: [String]
-        
-        init(models: [(String)] = [], textures: [(String)] = [], cacheHint: CacheHint = .forever) {
-        }
+//        var hasLoaded: Bool
+//        var models: [Entity]
+//        var textures: [Entity]
+//
+//        init(models: [(String)] = [], textures: [(String)] = [], cacheHint: CacheHint = .forever) {
+//        }
     }
     
     private var loading: [ResourceGroupLoaded] = [
