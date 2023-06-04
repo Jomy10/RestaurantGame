@@ -24,18 +24,22 @@ let package = Package(
             ],
             resources: [.copy("Resources")]
         ),
-        .target(name: "JAsync"),
+        .target(name: "JAsync",
+                exclude: ["README.md"]),
         .target(name: "GateUI",
                 dependencies: ["GateEngine"]),
+        .target(name: "KeyboardLayout_mac",
+                path: "Sources/KeyboardLayout/mac"),
         .target(name: "KeyboardLayout",
-                sources: {
-                    var sources = ["Sources/KeyboardLayout/keyboardLayout.swift"]
+                dependencies: {
+                    var dependencies: [Target.Dependency] = ["GateEngine"]
                     #if os(macOS)
-                    sources.append("Sources/KeyboardLayout/mac")
+                    dependencies.append("KeyboardLayout_mac")
                     #endif
-                    return sources
-                }()),
-        
+                    return dependencies
+                }(),
+                path: "Sources/KeyboardLayout/shared"
+        ),
         .testTarget(
             name: "RestaurantGameTests",
             dependencies: ["RestaurantGame"]),

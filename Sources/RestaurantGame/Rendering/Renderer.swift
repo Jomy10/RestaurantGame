@@ -30,10 +30,5 @@ final class RestaurantGameRenderingSystem: RenderingSystem {
         
         window.insert(scene)
         
-        //=== 2D ===//
-        
-        var canvas = Canvas(camera: camera, size: window.size, interfaceScale: window.interfaceScale)
-      
-        window.insert(canvas)
     }
 }

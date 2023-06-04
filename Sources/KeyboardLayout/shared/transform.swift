@@ -32,6 +32,7 @@ extension KeyboardLayout {
     }
 }
 
+// This is currently on French azerty
 fileprivate func characterFromAZERTYToQWERTY(_ char: Character) -> Character? {
     switch char {
         // thank you kind soul: https://github.com/mungadunga/azerty-to-qwerty/blob/main/src/replacements.ts

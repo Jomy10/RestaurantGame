@@ -62,12 +62,13 @@ extension KeyboardLayout {
     public static var detectOnce: Self? = {
         Self.detect
     }()
-    
+   
+    /// Returns nil if the keyboard layout could not be detected
     public static var detect: Self? {
         #if os(macOS)
         Self.mac_detect
         #else
-        // TODO: Windows & Linux
+        // TODO: Windows & Linux & WASM
         return nil // unimplemented
         #endif
     }
@@ -76,24 +77,30 @@ extension KeyboardLayout {
     @_transparent private static var mac_detect: Self? {
         let layout = String(cString: mac_getKBLayout())
             .replacingOccurrences(of: "com.apple.keylayout.", with: "")
+            .uppercased()
         
-//        let frRegexPat = #"French.*"#
-//        #if canImport(Foundation.Regex)
-//        let frenchRegex: Regex<Substring> = try! Regex(frRegexPat)
-//        #else
-//        let frenchRegex = try! NSRegularExpression(pattern: frRegexPat)
-//        #endif
-        
+        // TODO: needs to be tested
         switch layout {
-        case "Belgian":
+        case "BELGIAN":
             return .AZERTY(.BE)
-        case RegexMatchSwitch(#"French.*"#):
+        case RegexMatchSwitch(#"FRENCH.*"#):
             return .AZERTY(.FR)
         default: break
         }
         
         // Default cases
         if layout.contains("AZERTY") {
+            return .AZERTY(nil)
+        } else if layout.contains("QWERTY") {
+            return .QWERTY(nil)
+        } else if layout.contains("DVORAK") {
+            return .Dvorak(nil)
+        }
+       
+        // If we couldn't find it, search in the localizedName
+        let localName = String(cString: mac_getKBLocalizedName())
+            .uppercased()
+        if localName.contains("AZERTY") {
             return .AZERTY(nil)
         } else if layout.contains("QWERTY") {
             return .QWERTY(nil)

@@ -20,7 +20,17 @@ struct Menu: UIElement {
                     UIText("Buy property")
                 }.on(click: {
 //                    State.playerMode = .propertyBuying
-//                    assert(UIManager.UIs[.propertyBuyMenu] != nil, "you forgot to add the UI, stupid")
+                    // we are inside of .update, so we are already writing to context, that's why we
+                    // launch a new process here to change the context when update is done
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        do {
+                            try UIState.context.write { (code: inout UIState.UIViewCode?) in
+                                code = .propertyBuyMenu
+                            }
+                        } catch {
+                            print("Error occured in RWLock: \(error)")
+                        }
+                    }
 //
 //                    // Wait for the rwlock to become available (after UI has finished update)
 //                    DispatchQueue.global(qos: .userInteractive).async {
@@ -31,7 +41,9 @@ struct Menu: UIElement {
                     UIRectangle(size: Size2(splat: 50), color: .blue)
                     UIText("Buy furniture")
                 }.on(click: {
-//                    assert(UIManager.UIs[.objectBuyMenu] != nil, "you forgot to add the UI, stupid")
+//                    try! UIUpdateSystem.context.write { code in
+//                        code = .objectBuyMenu
+//                    }
 //
 //                    // Wait for the rwlock to become available (after UI has finished update)
 //                    DispatchQueue.global(qos: .userInteractive).async {

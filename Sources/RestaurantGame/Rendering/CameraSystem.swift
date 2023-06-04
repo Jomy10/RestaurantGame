@@ -27,7 +27,7 @@ final class CameraSystem: System {
         
         camera.insert(CameraComponent.self)
         camera.configure(Transform3Component.self) { component in
-            component.position.move(1, toward: .backward)
+            component.position.move(2, toward: .backward)
             component.position.move(2, toward: .up)
             component.rotation.x = (-1.0 * (component.position.y - 1) / 5)
         }
@@ -91,14 +91,6 @@ final class CameraSystem: System {
                     .ensureBetween(Self.minXRotation, Self.maxXRotation)
             }
         }
-//        if InputSystem.isbuttonHeldDown(.button1) {
-//            guard let previousPos = self.previousMousePos else {
-//                self.previousMousePos =  input.mouse.position
-//                return
-//            }
-            
-            // let posDiff = previousPos - (input.mouse.position ?? previousPos)
-//        }
     }
     
     override class var phase: System.Phase { .userInterface }

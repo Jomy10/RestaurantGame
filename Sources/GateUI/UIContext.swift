@@ -73,6 +73,12 @@ public struct UIContext {
         self.rootElement?.size
     }
     
+    public init() {}
+    public init(ui: any UIElement, at position: Position2) {
+        self.init()
+        self.setUI(at: position, ui)
+    }
+    
     public mutating func setUI(at position: Position2? = nil, _ root: any UIElement) {
         if let pos = position {
             self.position = pos
