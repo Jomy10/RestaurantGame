@@ -56,74 +56,121 @@ extension LevelSystem {
     public static var grid: GridObjects = GridObjects()
     
     struct GridObjects {
-        fileprivate init() {}
-        
-        // - MARK: Grid variables
-        private var gridObjects: [GridPos:Entity] = [:]
-        private var shouldRecalculateGrid: Bool = true
-        
-        // - MARK: Object add / remove
-        public mutating func addObjectToGrid(_ entity: GameObject, at position: GridPos) {
-            self.gridObjects[position] = entity
-            self.shouldRecalculateGrid = true
-        }
-        
-        public mutating func removeObjectFromGrid(_ entity: Entity) {
-            guard let key = (self.gridObjects.first { (key: GridPos, value: Entity) in
-                value == entity
-            }?.key) else {
-                return
-            }
-            
-            self.gridObjects.removeValue(forKey: key)
-            self.shouldRecalculateGrid = true
-        }
-        
-        // - MARK: GridSize
-        /// The lowest X coordinate, must be set
+        private var gridObjects: [UUID:(GridPos, GameObject)] = [:]
         public var minX: Int32 = -2
         public var minY: Int32 = -2
-        
+        public var width: Int32 = 0
+        public var height: Int32 = 0
         public mutating func setGridSize(width: Int32, height: Int32) {
-            self.shouldRecalculateGrid = true
-            self.__gridStorage = (0..<width).map { _ in
-                (0..<height).map { _ in
-                        .empty
-                }
-            }
+            self.width = width
+            self.height = height
+        }
+    
+        public mutating func addObjectToGrid(_ obj: GameObject, at position: GridPos) {
+            self.gridObjects[obj.id] = (position, obj)
         }
         
-        // - MARK: Grid
-        enum GridValue: Int8, Codable {
-            case unavailable
-            case empty
-            case occupied
+        public mutating func removeObjectFromGrid(_ obj: GameObject) {
+            self.gridObjects.removeValue(forKey: obj.id)
         }
         
-        /// Storage for the grid. It is always resized for the proper width and height
-        private var __gridStorage: [[GridValue]] = [[]]
-        /// Returns the current grid configuration
-        var grid: [[GridValue]] {
-            mutating get {
-                if self.shouldRecalculateGrid {
-                    self.calculateGrid()
-                }
-                return self.__gridStorage
+        /// returns whether the specified object can be placed on the grid at the given position
+        /// i.e. if it is not blocked by any other object
+        public func canPlace(object objectToBePlaced: GameObject, at position: GridPos) -> Bool {
+            let pObjGridSize = objectToBePlaced.gridSize
+            let pObjPos = objectToBePlaced.minGridPos(pos: position, size: pObjGridSize)
+            // TODO: account for the weird shape of the restaurant
+            if pObjPos.x < self.minX || pObjPos.y < self.minY
+                || pObjPos.x + pObjGridSize.x > self.minX + self.width
+                || pObjPos.y + pObjGridSize.y > self.minY + self.height {
+                // object outside of the restaurant
+                return false
             }
-        }
-        
-        /// Recalculate the grid, only do this when `self.shouldRecalculateGrid` is true
-        /// This will set the `__gridStorage`
-        private mutating func calculateGrid() {
-            self.gridObjects.forEach { (pos: GridPos, obj: Entity) in
-                let scale = obj.transform3.scale
-                let gridScale = sizeToGridSize(scale)
-                for x in 0..<gridScale.x {
-                    for y in 9..<gridScale.y {
-                        self.__gridStorage[Int(pos.x - self.minX + x)][Int(pos.y - self.minY + y)] = .occupied
-                    }
+            
+            // TODO: filter -> only check close objects
+            for (objPos, object) in self.gridObjects.values {
+                if pObjPos.x + pObjGridSize.x < objPos.x || pObjPos.y + pObjGridSize.y < objPos.y {
+                    return false
+                }
+                let objGridSize = object.gridSize
+                if pObjPos.x > objPos.x + objGridSize.x || pObjPos.y > objPos.y + objGridSize.y {
+                    return false
                 }
             }
+            
+            return true
         }
     }
+    
+//    struct GridObjectsOld {
+//        fileprivate init() {}
+//
+//        // - MARK: Grid variables
+//        private var gridObjects: [GridPos:Entity] = [:]
+//        private var shouldRecalculateGrid: Bool = true
+//
+//        // - MARK: Object add / remove
+//        public mutating func addObjectToGrid(_ entity: GameObject, at position: GridPos) {
+//            self.gridObjects[position] = entity
+//            self.shouldRecalculateGrid = true
+//        }
+//
+//        public mutating func removeObjectFromGrid(_ entity: Entity) {
+//            guard let key = (self.gridObjects.first { (key: GridPos, value: Entity) in
+//                value == entity
+//            }?.key) else {
+//                return
+//            }
+//
+//            self.gridObjects.removeValue(forKey: key)
+//            self.shouldRecalculateGrid = true
+//        }
+//
+//        // - MARK: GridSize
+//        /// The lowest X coordinate, must be set
+//        public var minX: Int32 = -2
+//        public var minY: Int32 = -2
+//
+//        public mutating func setGridSize(width: Int32, height: Int32) {
+//            self.shouldRecalculateGrid = true
+//            self.__gridStorage = (0..<width).map { _ in
+//                (0..<height).map { _ in
+//                        .empty
+//                }
+//            }
+//        }
+//
+//        // - MARK: Grid
+//        enum GridValue: Int8, Codable {
+//            case unavailable
+//            case empty
+//            case occupied
+//        }
+//
+//        /// Storage for the grid. It is always resized for the proper width and height
+//        private var __gridStorage: [[GridValue]] = [[]]
+//        /// Returns the current grid configuration
+//        var grid: [[GridValue]] {
+//            mutating get {
+//                if self.shouldRecalculateGrid {
+//                    self.calculateGrid()
+//                }
+//                return self.__gridStorage
+//            }
+//        }
+//
+//        /// Recalculate the grid, only do this when `self.shouldRecalculateGrid` is true
+//        /// This will set the `__gridStorage`
+//        private mutating func calculateGrid() {
+//            self.gridObjects.forEach { (pos: GridPos, obj: Entity) in
+//                let scale = obj.transform3.scale
+//                let gridScale = sizeToGridSize(scale)
+//                for x in 0..<gridScale.x {
+//                    for y in 9..<gridScale.y {
+//                        self.__gridStorage[Int(pos.x - self.minX + x)][Int(pos.y - self.minY + y)] = .occupied
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

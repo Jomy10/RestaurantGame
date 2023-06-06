@@ -13,7 +13,7 @@ final class GameObjectComponent: Component {
     var gameObject: GameObject
     
     init() {
-        self.gameObject = .uninitialized
+        self.gameObject = GameObject(.uninitialized)
     }
     
     init(_ gameObject: GameObject) {

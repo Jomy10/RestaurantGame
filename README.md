@@ -1,3 +1,3 @@
 # RestaurantGame
 
-A description of this package.
+A game where you build and manage a restaurant (WIP)

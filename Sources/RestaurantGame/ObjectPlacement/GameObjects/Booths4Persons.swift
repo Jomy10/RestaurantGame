@@ -61,6 +61,16 @@ import GateEngine
     }
 }
 
+@_transparent func b4p_minPos(gridPos: GridPos, size: GridSize) -> GridPos {
+    switch size {
+    case GridSize(3, 2):
+        return GridPos(gridPos.x - 1, gridPos.y)
+    case GridSize(2, 3):
+        return GridPos(gridPos.x, gridPos.y - 1)
+    default: unreachable()
+    }
+}
+
 extension GameObject {
     @MainActor static func newBooths4Persons(_ game: Game, position: Position3 = Position3(0, 0, 0)) -> Self {
         let booth1 = ObjectSpawner.spawnBooth(game, position: position + Position3(0, 0, 1), type: .single)
@@ -68,10 +78,10 @@ extension GameObject {
         booth2.component(ofType: Transform3Component.self)?.rotation *= (Quaternion(direction: .left) * 2.0)
         let table = ObjectSpawner.spawnTable(game)
         
-        return .booths4Persons(
+        return GameObject(.booths4Persons(
             booth1: booth1,
             table: table,
             Booth2: booth2
-        )
+        ))
     }
 }
