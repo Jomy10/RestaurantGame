@@ -20,6 +20,10 @@ struct GridPos: Hashable, Equatable, IVector2 {
         self.x = Int32(chunkPos.x)
         self.y = Int32(chunkPos.y)
     }
+    
+    static var zero: Self {
+        Self(0, 0)
+    }
 }
   
 typealias GridSize = GridPos
@@ -59,7 +63,7 @@ extension LevelSystem {
         private var shouldRecalculateGrid: Bool = true
         
         // - MARK: Object add / remove
-        public mutating func addObjectToGrid(_ entity: Entity, at position: GridPos) {
+        public mutating func addObjectToGrid(_ entity: GameObject, at position: GridPos) {
             self.gridObjects[position] = entity
             self.shouldRecalculateGrid = true
         }

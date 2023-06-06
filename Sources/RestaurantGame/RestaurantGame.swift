@@ -13,7 +13,7 @@ final class RestaurantGame: GameDelegate {
         
         // Set up the different UIs
         // TODO: do this after the initial resources have been loaded (in ResourceLoader)
-        UIState.setup()
+        UIState.setup(game)
         
         LevelSystem.chunks = [ChunkPos(0, 0), ChunkPos(1, 0)]
         LevelSystem.loadChunks(game, chunks: LevelSystem.chunks)

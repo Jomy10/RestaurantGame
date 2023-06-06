@@ -10,9 +10,9 @@ import GateEngine
 /// Move objects in the grid, rotate it and place it down
 final class ObjectMovementSystem: System {
     /// The object that is being moved
-    private static var placingObject: Entity? = nil
+    private static var placingObject: GameObject? = nil
     
-    public static func selectObject(_ object: Entity) {
+    public static func selectObject(_ object: GameObject) {
         Self.placingObject = object
     }
     
@@ -32,29 +32,26 @@ final class ObjectMovementSystem: System {
         let gridPos = floorPosToGridPos(mouseFloorPos)
         
         // transform grid position back to 3d space
-        let floorGridPos: Position3
-        if let transform = object.component(ofType: CustomGridPositionTransformComponent.self) {
-            floorGridPos = transform.transform(gridPos)
-        } else {
-            floorGridPos = gridPosToFloorPos(gridPos)
-        }
+        let floorGridPos: Position3 = gridPosToFloorPos(gridPos)
         
         // move the object to the mouse, snapped to the grid
+        object.move(to: floorGridPos)
 //        object.position3 = floorGridPos
 //        if let groupedObjects = object.component(ofType: GroupedComponent.self)?.components {
 //            groupedObjects.forEach { entity in
 //                entity.position3 = floorGridPos
 //            }
 //        }
-        transformObjects(object) { transform in
-            transform.position = floorGridPos
-        }
+//        transformObjects(object) { transform in
+//            transform.position = floorGridPos
+//        }
         
         // rotate the object
         if InputSystem.keyClicked[.character("r")]! {
-            transformObjects(object) { transform in
-                transform.rotation *= Quaternion.init(direction: .left)
-            }
+            object.rotate(times: 1)
+//            transformObjects(object) { transform in
+//                transform.rotation *= Quaternion.init(direction: .left)
+//            }
         }
         
         // place the object down

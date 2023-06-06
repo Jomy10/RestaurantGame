@@ -22,6 +22,7 @@ struct Menu: UIElement {
 //                    State.playerMode = .propertyBuying
                     // we are inside of .update, so we are already writing to context, that's why we
                     // launch a new process here to change the context when update is done
+                    // i.e. wait for the lock to become available
                     DispatchQueue.global(qos: .userInteractive).async {
                         do {
                             try UIState.context.write { (code: inout UIState.UIViewCode?) in
@@ -31,24 +32,20 @@ struct Menu: UIElement {
                             print("Error occured in RWLock: \(error)")
                         }
                     }
-//
-//                    // Wait for the rwlock to become available (after UI has finished update)
-//                    DispatchQueue.global(qos: .userInteractive).async {
-//                        try! UIManager.context.write { $0 = UIManager.UIs[.propertyBuyMenu] }
-//                    }
                 })
                 UIVStack {
                     UIRectangle(size: Size2(splat: 50), color: .blue)
                     UIText("Buy furniture")
                 }.on(click: {
-//                    try! UIUpdateSystem.context.write { code in
-//                        code = .objectBuyMenu
-//                    }
-//
-//                    // Wait for the rwlock to become available (after UI has finished update)
-//                    DispatchQueue.global(qos: .userInteractive).async {
-//                        try! UIManager.context.write { $0 = UIManager.UIs[.objectBuyMenu] }
-//                    }
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        do {
+                            try UIState.context.write { (code: inout UIState.UIViewCode?) in
+                                code = .objectBuyMenu
+                            }
+                        } catch {
+                            print("Error occured in RWLock: \(error)")
+                        }
+                    }
                 })
             }
         }

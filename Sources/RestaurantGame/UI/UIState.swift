@@ -20,9 +20,11 @@ struct UIState {
     public static var contexts: [UIViewCode:UIContext] = [:]
     public static var context: RWLock<UIViewCode?> = try! RWLock(nil)
     
-    public static func setup() {
+    public static func setup(_ game: Game) {
         Self.contexts = [
-            .menu: UIContext(ui: Menu(), at: Position2(0, 0))
+            .menu: UIContext(ui: Menu(), at: Position2(0, 0)),
+            .objectBuyMenu: UIContext(ui: ObjectSelectMenu(game), at: Position2(0, 0)),
+            .propertyBuyMenu: UIContext(ui: PropertyBuyMenu(), at: Position2(0, 0)),
         ]
     }
 }

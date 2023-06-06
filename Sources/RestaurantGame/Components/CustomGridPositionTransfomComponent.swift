@@ -7,6 +7,7 @@
 
 import GateEngine
 
+@available(*, deprecated)
 final class CustomGridPositionTransformComponent: Component {
     private var moveTransform: ((GridPos) -> (Position3))? = nil
     
