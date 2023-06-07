@@ -48,10 +48,15 @@ final class ObjectMovementSystem: System {
         
         // rotate the object
         if InputSystem.keyClicked[.character("r")]! {
-            object.rotate(times: 1)
+            object.rotate()
 //            transformObjects(object) { transform in
 //                transform.rotation *= Quaternion.init(direction: .left)
 //            }
+        }
+        
+        if !LevelSystem.grid.canPlace(object: object, at: gridPos) {
+            print("You can't park there mate")
+            // return
         }
         
         // place the object down

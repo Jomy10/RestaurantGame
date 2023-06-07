@@ -21,7 +21,8 @@ struct ObjectSelectMenu: UIElement {
                     UIText("4 persons")
                 }.on(click: {
                     //ObjectPlacer.place(game, object: .booth)
-                    GameObject.newBooths4Persons(game)
+                    let object = GameObject.newBooths4Persons(game)
+                    ObjectMovementSystem.selectObject(object)
                 })
                 UIVStack {
                     UIRectangle(size: Size2(splat: 25), color: .green)

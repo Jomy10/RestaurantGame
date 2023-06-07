@@ -13,7 +13,7 @@
     #endif
 }
 
-@_transparent func unreachable(msg: @autoclosure () -> String = "Unreachable reached") -> Never {
+@_transparent func unreachable(_ msg: @autoclosure () -> String = "Unreachable reached") -> Never {
     #if DEBUG
     fatalError(msg(), file: #file, line: #line)
     #else

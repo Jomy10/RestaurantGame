@@ -8,47 +8,54 @@
 import GateEngine
 
 @_transparent func b4p_move(to position: Position3, booth1: Entity, table: Entity, booth2: Entity) {
+    guard let tableTransf = table.component(ofType: Transform3Component.self) else { return }
+    let diff = position - tableTransf.position
+    tableTransf.position = position
     transformObjects(booth1) { t in
-        t.position = position + Position3(0, 0, 1)
+        t.position += diff
     }
     transformObjects(booth2) { t in
-        t.position = position + Position3(0, 0, -1)
+        t.position += diff
     }
-    table.component(ofType: Transform3Component.self)?.position = position
 }
 
-@_transparent func b4p_rotate(times: Int, booth1: Entity, table: Entity, booth2: Entity) {
+@_transparent func b4p_rotate(booth1: Entity, table: Entity, booth2: Entity) {
     let tableTransf = table.component(ofType: Transform3Component.self)!
-    let booth1newPos: Position3?
-    let booth2newPos: Position3?
-    switch times % 4 {
-    case 0:
-        booth1newPos = nil
-        booth2newPos = nil
-    case 1:
-        booth1newPos = tableTransf.position + Position3(1, 0, 0)
-        booth2newPos = tableTransf.position + Position3(-1, 0, 0)
-    case 2:
-        booth1newPos = tableTransf.position + Position3(0, 0, -1)
-        booth2newPos = tableTransf.position + Position3(0, 0, 1)
-    case 3:
-        booth1newPos = tableTransf.position + Position3(-1, 0, 0)
-        booth2newPos = tableTransf.position + Position3(1, 0, 0)
-    default:
-        unreachable()
+    let booth1Transf = booth1.component(as: Transform3Component.self)!
+    let booth1newPos: Position3
+    let booth2newPos: Position3
+    let posOffset: Position3
+    switch (tableTransf.position - booth1Transf.position) {
+    case Position3(-1, 0, 0):
+        // booth 1 is left of table
+        posOffset = Position3(0, 0, -1)
+    case Position3(1, 0, 0):
+        // booth 1 is right of table
+        posOffset = Position3(0, 0, 1)
+    case Position3(0, 0, -1):
+        // booth 1 is above of table
+        posOffset = Position3(1, 0, 0)
+    case Position3(0, 0, 1):
+        // booth 1 is below of table
+        posOffset = Position3(-1, 0, 0)
+    default: unreachable("This may happen due to a bug in code, but shouldn't be possible")
     }
+    booth1newPos = tableTransf.position + posOffset
+    booth2newPos = tableTransf.position - posOffset
+   
+    let rotation = Quaternion(direction: .right)
     
     transformObjects(booth1) { transform in
-        transform.rotation *= (Quaternion(direction: .left) * Float(times))
-        if let booth1newPos = booth1newPos { transform.position = booth1newPos }
+        transform.rotation *= rotation
+        transform.position = booth1newPos
     }
     
     transformObjects(booth2) { transform in
-        transform.rotation *= (Quaternion(direction: .left) * Float(times))
-        if let booth2newPos = booth2newPos { transform.position = booth2newPos }
+        transform.rotation *= rotation
+        transform.position = booth2newPos
     }
     
-    tableTransf.rotation *= (Quaternion(direction: .left) * Float(times))
+    tableTransf.rotation *= rotation
 }
 
 @_transparent func b4p_size(booth1: Entity, table: Entity) -> GridSize {
@@ -75,7 +82,9 @@ extension GameObject {
     @MainActor static func newBooths4Persons(_ game: Game, position: Position3 = Position3(0, 0, 0)) -> Self {
         let booth1 = ObjectSpawner.spawnBooth(game, position: position + Position3(0, 0, 1), type: .single)
         let booth2 = ObjectSpawner.spawnBooth(game, position: position + Position3(0, 0, -1), type: .single)
-        booth2.component(ofType: Transform3Component.self)?.rotation *= (Quaternion(direction: .left) * 2.0)
+        transformObjects(booth1) { transf in
+            transf.rotation *= (Quaternion(direction: .left) * Quaternion(direction: .left))
+        }
         let table = ObjectSpawner.spawnTable(game)
         
         return GameObject(.booths4Persons(

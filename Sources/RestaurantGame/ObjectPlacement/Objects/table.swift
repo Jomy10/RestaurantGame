@@ -8,7 +8,7 @@
 import GateEngine
 
 extension ObjectSpawner {
-    fileprivate static let tableSize = Size3(0.5)
+    fileprivate static let tableSize = Size3(1)
     
     enum TableType {
         case rectangle

@@ -41,11 +41,11 @@ extension GameObject {
         }
     }
     
-    func rotate(times: Int) {
+    func rotate() {
         switch self.objects {
         case .uninitialized: break
         case .booths4Persons(booth1: let booth1, table: let table, Booth2: let booth2):
-            b4p_rotate(times: times, booth1: booth1, table: table, booth2: booth2)
+            b4p_rotate(booth1: booth1, table: table, booth2: booth2)
         }
     }
     
