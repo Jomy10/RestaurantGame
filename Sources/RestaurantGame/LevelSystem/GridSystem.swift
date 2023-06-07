@@ -30,23 +30,26 @@ typealias GridSize = GridPos
 
 func floorPosToGridPos(_ floorPos: Position3) -> GridPos {
     return GridPos(
-        Int32(floor(floorPos.x * 2)),
-        Int32(floor(floorPos.z * 2))
+        Int32(floor(floorPos.x * (GRID_SIZE / 2))),
+        Int32(floor(floorPos.z * (GRID_SIZE / 2)))
     )
 }
 
 func gridPosToFloorPos(_ gridPos: GridPos) -> Position3 {
     Position3(
-        Float(gridPos.x) / 2.0,
+        Float(gridPos.x) / (GRID_SIZE / 2.0),
         0,
-        Float(gridPos.y) / 2.0
+        Float(gridPos.y) / (GRID_SIZE / 2.0)
     )
 }
 
+/// One floor tile is divided into `GRID_SIZE` elements
+let GRID_SIZE: Float = 2
+
 func sizeToGridSize(_ size: Size3) -> GridSize {
     return GridSize(
-        Int32(floor(size.x * 4)),
-        Int32(floor(size.z * 4))
+        Int32(floor(size.x * GRID_SIZE)),
+        Int32(floor(size.z * GRID_SIZE))
     )
 }
 
