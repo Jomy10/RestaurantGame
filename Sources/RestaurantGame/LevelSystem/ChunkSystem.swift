@@ -7,6 +7,9 @@
 
 import GateEngine
 
+/// amount of floor entities per chunk
+let FLOORS_PER_CHUNK: Int = 2
+
 struct ChunkPos: Hashable, Equatable, IVector2 {
     var x, y: Int16
     
@@ -87,5 +90,5 @@ extension Chunks {
 }
 
 func chunkPosToFloorPos(_ pos: ChunkPos) -> Position3 {
-    gridPosToFloorPos(GridPos(fromChunk: pos) * 4)
+    gridPosToFloorPos(GridPos(fromChunk: pos) * Int32(GRID_SIZE))
 }
