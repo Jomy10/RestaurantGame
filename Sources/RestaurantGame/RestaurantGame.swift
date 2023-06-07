@@ -5,6 +5,7 @@ final class RestaurantGame: GameDelegate {
     public func didFinishLaunching(game: Game, options: LaunchOptions) {
         game.insertSystem(CameraSystem.self)
         game.insertSystem(ObjectMovementSystem.self)
+        game.insertSystem(ResourceLoadingSystem.self)
         
         // UI
         game.insertSystem(InputSystem.self)
