@@ -22,7 +22,7 @@ fileprivate extension Float {
 final class CameraSystem: System {
     private var previousMouseFloorPos: Position3? = nil
     
-    override func setup(game: Game, input: HID) {
+    override func setup(game: Game, input: HID) async {
         let camera = Entity()
         
         camera.insert(CameraComponent.self)
@@ -44,7 +44,7 @@ final class CameraSystem: System {
     // TODO: if not in menu / when placing objects
     // override func shouldUpdate(game: Game, input: HID, withTimePassed deltaTime: Float) -> Bool {}
     
-    override func update(game: Game, input: HID, withTimePassed delta: Float) {
+    override func update(game: Game, input: HID, withTimePassed delta: Float) async {
         guard let mousePos2 = input.mouse.position else {
             self.previousMouseFloorPos = nil
             return

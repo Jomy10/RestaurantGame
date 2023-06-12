@@ -8,7 +8,7 @@
 import GateEngine
 
 final class OpenMenuSystem: System {
-    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) {
+    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) async {
         // TODO: when an icon is clicked too
         
         if InputSystem.keyClicked[transform(key: .character("m"))].unsafelyUnwrapped {

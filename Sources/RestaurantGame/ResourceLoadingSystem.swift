@@ -251,16 +251,16 @@ final class ResourceLoadingSystem: System {
     private var done: Bool = false
     private var loader: ResourceLoader?
     
-    override func setup(game: Game, input: HID) {
+    override func setup(game: Game, input: HID) async {
         self.loader = ResourceLoader()
         self.loader!.start()
     }
     
-    @inline(__always) override func shouldUpdate(game: Game, input: HID, withTimePassed deltaTime: Float) -> Bool {
+    @inline(__always) override func shouldUpdate(game: Game, input: HID, withTimePassed deltaTime: Float) async -> Bool {
         return !done
     }
     
-    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) {
+    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) async {
         self.loader!.loadNextIfFinished()
         if let err = self.loader!.error {
             print("Error occurred: \(err)")

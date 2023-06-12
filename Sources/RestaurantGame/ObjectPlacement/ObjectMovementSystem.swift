@@ -16,13 +16,13 @@ final class ObjectMovementSystem: System {
         Self.placingObject = object
     }
     
-    override func setup(game: Game, input: HID) {}
+    override func setup(game: Game, input: HID) async {}
     
-    override func shouldUpdate(game: Game, input: HID, withTimePassed deltaTime: Float) -> Bool {
+    override func shouldUpdate(game: Game, input: HID, withTimePassed deltaTime: Float) async -> Bool {
         Self.placingObject != nil
     }
     
-    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) {
+    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) async {
         guard let mousePosition = input.mouse.position else { return }
         let object = Self.placingObject.unsafelyUnwrapped // checked in shouldUpdate
         let picker = InputSystem.mousePicker(game, mousePosition: mousePosition)

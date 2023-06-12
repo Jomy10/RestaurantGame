@@ -7,6 +7,7 @@
 
 import GateEngine
 
+/// Indicates an object that can be placed in the restaurant. Contains mutiple geometry objects
 final class GameObjectComponent: Component {
     static var componentID: GateEngine.ComponentID = ComponentID()
     

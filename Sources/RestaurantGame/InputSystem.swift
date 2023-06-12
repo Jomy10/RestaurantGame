@@ -35,7 +35,7 @@ final class InputSystem: System {
         transform(key: .character("r")): false,
         transform(key: .character("m")): false,
         .escape: false,
-        .enter(): false,
+        .enter(.standard): false,
     ]
     private static var keyWasJustClicked: [KeyboardKey:Bool] = [:]
     public static var keyClicked: [KeyboardKey:Bool] {
@@ -47,12 +47,12 @@ final class InputSystem: System {
         Self.__mousePicker ?? MousePicker(game, mousePosition)
     }
     
-    override func setup(game: Game, input: HID) {
+    override func setup(game: Game, input: HID) async {
         Self.buttonWasJustClicked = Self.buttonHeldDown
         Self.keyWasJustClicked = Self.keyHeldDown
     }
     
-    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) {
+    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) async {
         Self.__mousePicker = nil
         
         // Mouse button
@@ -76,7 +76,7 @@ final class InputSystem: System {
         
         // Keyboard keys
         Self.keyHeldDown.keys.forEach { key in
-            if input.keyboard.button(key).isPressed {
+            if input.keyboard.button(key)?.isPressed ?? false {
                 if Self.keyHeldDown[key].unsafelyUnwrapped {
                     Self.keyWasJustClicked[key] = false
                 } else {

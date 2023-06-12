@@ -32,5 +32,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get install freeglut3-dev
+      - name: Update Swift package
+        if: matrix.os == 'ubuntu-latest'
+        run: swift package update
       - name: Build
         run: swift build

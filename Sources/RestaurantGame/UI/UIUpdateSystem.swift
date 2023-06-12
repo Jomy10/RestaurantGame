@@ -11,8 +11,8 @@ import Foundation
 import JAsync
 
 final class UIUpdateSystem: System {
-    override func setup(game: Game, input: HID) {}
-    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) {
+    override func setup(game: Game, input: HID) async {}
+    override func update(game: Game, input: HID, withTimePassed deltaTime: Float) async {
         do {
             try UIState.context.write { context in
                 guard let currentContext = context else { return }
