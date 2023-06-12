@@ -12,13 +12,10 @@ final class OpenMenuSystem: System {
         // TODO: when an icon is clicked too
         
         if InputSystem.keyClicked[transform(key: .character("m"))].unsafelyUnwrapped {
-            print("m was clicked")
             try! UIState.context.write { code in
-                print("Code was \(code)")
                 if code == nil {
                     code = .menu
                 }
-                print("And is now \(code)")
             }
         }
     }

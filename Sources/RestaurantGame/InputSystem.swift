@@ -30,8 +30,9 @@ final class InputSystem: System {
         !(Self.buttonWasJustClicked[button] ?? false) && (Self.buttonHeldDown[button] ?? false)
     }
     
+    // Define keys that need to be listened to here
     private static var keyHeldDown: [KeyboardKey:Bool] = [
-        .character("r"): false,
+        transform(key: .character("r")): false,
         transform(key: .character("m")): false,
         .escape: false,
         .enter(): false,

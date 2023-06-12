@@ -9,7 +9,7 @@ import GateEngine
 
 @MainActor
 public struct UIText: UIElement {
-    private var text: UIValue<String> //Observable<String>
+    private var text: UIValue<String>
     private var pointSize: UInt
     private var color: Color
     private var textElement: Text
@@ -42,4 +42,3 @@ public struct UIText: UIElement {
     
     public var size: GameMath.Size2 { self.textElement.size }
 }
-

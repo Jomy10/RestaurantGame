@@ -27,16 +27,17 @@ final class CameraSystem: System {
         
         camera.insert(CameraComponent.self)
         camera.configure(Transform3Component.self) { component in
-            component.position.move(2, toward: .backward)
-            component.position.move(2, toward: .up)
+            component.position.move(4, toward: .backward)
+            component.position.move(2, toward: .right) // moving towwards the center of the initial starting restaurant
+            component.position.move(3, toward: .up)
             component.rotation.x = (-1.0 * (component.position.y - 1) / 5)
         }
         
         game.insertEntity(camera)
     }
     
-    private static var maxYPosition: Float = 5.5
-    private static var minYPosition: Float = 1
+    private static var maxYPosition: Float = 10
+    private static var minYPosition: Float = 2
     private static var minXRotation: Float = -0.6
     private static var maxXRotation: Float = 0
     
